@@ -72,8 +72,14 @@
 .recharts-tooltip-wrapper { z-index: 100; }
 
 /* PWA safe areas */
-.pb-safe { padding-bottom: env(safe-area-inset-bottom); }
-.pt-safe { padding-top: env(safe-area-inset-top); }
+.pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); }
+.pt-safe { padding-top: env(safe-area-inset-top, 0px); }
+
+/* Mobile viewport fix — 100dvh with 100vh fallback for older iOS */
+#root {
+  min-height: 100vh;
+  min-height: 100dvh;
+}
 
 /* Momentum bar */
 @keyframes shimmer {

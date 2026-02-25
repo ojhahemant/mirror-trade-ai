@@ -1,5 +1,5 @@
 import {
-  ComposedChart, Area, Line, XAxis, YAxis, CartesianGrid, Tooltip,
+  ComposedChart, Area, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, ReferenceLine
 } from 'recharts'
 import { format } from 'date-fns'
@@ -11,6 +11,44 @@ const COLORS = {
   ema21: '#FFD700',
   grid: '#21262D',
   areaFill: '#00C896',
+}
+
+// Must be defined at MODULE level — NOT inside a component.
+// Recharts injects xAxisMap/yAxisMap when used inside ComposedChart.
+function CustomCandleLayer({ xAxisMap, yAxisMap, data: chartData }) {
+  try {
+    const xAxis = xAxisMap?.[0]
+    const yAxis = yAxisMap?.[0]
+    if (!xAxis || !yAxis || !chartData?.length) return null
+    const { scale: xScale } = xAxis
+    const { scale: yScale } = yAxis
+    if (!xScale || !yScale) return null
+    const bandwidth = xScale.bandwidth ? xScale.bandwidth() : 8
+    return (
+      <g>
+        {chartData.map((d, i) => {
+          const cx = (xScale(d.time) ?? 0) + bandwidth / 2
+          const yHigh = yScale(d.high) ?? 0
+          const yLow = yScale(d.low) ?? 0
+          const yOpen = yScale(d.open) ?? 0
+          const yClose = yScale(d.close) ?? 0
+          const color = d.isBull ? COLORS.bullCandle : COLORS.bearCandle
+          const bodyTop = Math.min(yOpen, yClose)
+          const bodyBot = Math.max(yOpen, yClose)
+          const bodyH = Math.max(1, bodyBot - bodyTop)
+          const w = Math.max(2, bandwidth * 0.7)
+          return (
+            <g key={i}>
+              <line x1={cx} y1={yHigh} x2={cx} y2={yLow} stroke={color} strokeWidth={1} opacity={0.8} />
+              <rect x={cx - w / 2} y={bodyTop} width={w} height={bodyH} fill={color} opacity={0.85} rx={1} />
+            </g>
+          )
+        })}
+      </g>
+    )
+  } catch {
+    return null
+  }
 }
 
 function CustomTooltip({ active, payload, label }) {
@@ -68,41 +106,6 @@ export default function CandlestickChart({ candles = [], signals = [], height = 
   const formatYAxis = (v) =>
     v >= 1000 ? `${(v / 1000).toFixed(1)}k` : String(Math.round(v))
 
-  // Build gradient candle bars as custom SVG layer
-  const CustomCandleLayer = ({ xAxisMap, yAxisMap, data: chartData }) => {
-    const xAxis = xAxisMap?.[0]
-    const yAxis = yAxisMap?.[0]
-    if (!xAxis || !yAxis) return null
-    const { scale: xScale } = xAxis
-    const { scale: yScale } = yAxis
-    if (!xScale || !yScale) return null
-    const bandwidth = xScale.bandwidth ? xScale.bandwidth() : 8
-    return (
-      <g>
-        {chartData.map((d, i) => {
-          const cx = xScale(d.time) + bandwidth / 2
-          const yHigh = yScale(d.high)
-          const yLow = yScale(d.low)
-          const yOpen = yScale(d.open)
-          const yClose = yScale(d.close)
-          const color = d.isBull ? COLORS.bullCandle : COLORS.bearCandle
-          const bodyTop = Math.min(yOpen, yClose)
-          const bodyBot = Math.max(yOpen, yClose)
-          const bodyH = Math.max(1, bodyBot - bodyTop)
-          const w = Math.max(2, bandwidth * 0.7)
-          return (
-            <g key={i}>
-              {/* Wick */}
-              <line x1={cx} y1={yHigh} x2={cx} y2={yLow} stroke={color} strokeWidth={1} opacity={0.8} />
-              {/* Body */}
-              <rect x={cx - w / 2} y={bodyTop} width={w} height={bodyH} fill={color} opacity={0.85} rx={1} />
-            </g>
-          )
-        })}
-      </g>
-    )
-  }
-
   return (
     <div className="w-full" style={{ height }}>
       <ResponsiveContainer width="100%" height="100%">
@@ -149,17 +152,6 @@ export default function CandlestickChart({ candles = [], signals = [], height = 
 
           {/* Custom candlestick SVG layer */}
           <CustomCandleLayer />
-
-          {/* EMA-style smooth line on close */}
-          <Line
-            type="monotone"
-            dataKey="close"
-            stroke="#00C896"
-            strokeWidth={1.5}
-            dot={false}
-            activeDot={false}
-            isAnimationActive={false}
-          />
 
           {/* Signal markers */}
           {signals.map((sig, i) => {

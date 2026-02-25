@@ -95,11 +95,11 @@ function SideNav() {
 export default function App() {
   return (
     <BrowserRouter>
-      <div className="min-h-screen bg-bg-primary">
+      <div className="bg-bg-primary" style={{ minHeight: '100dvh' }}>
         <SideNav />
 
         {/* Main content — shifted right on desktop */}
-        <main className="lg:ml-56 min-h-screen">
+        <main className="lg:ml-56" style={{ minHeight: '100dvh' }}>
           <Routes>
             <Route path="/"            element={<Dashboard />} />
             <Route path="/history"     element={<SignalHistory />} />
