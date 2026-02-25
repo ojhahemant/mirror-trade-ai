@@ -1,0 +1,56 @@
+# ── Web Framework ─────────────────────────────────────────────────────────────
+fastapi==0.111.0
+uvicorn[standard]==0.30.1
+websockets==12.0
+python-multipart==0.0.9
+
+# ── Database ──────────────────────────────────────────────────────────────────
+sqlalchemy==2.0.30
+asyncpg==0.29.0
+alembic==1.13.1
+psycopg2-binary==2.9.9
+
+# ── Redis / Celery ────────────────────────────────────────────────────────────
+redis==5.0.4
+celery==5.4.0
+celery[redis]==5.4.0
+flower==2.0.1
+
+# ── Data & ML ─────────────────────────────────────────────────────────────────
+pandas==2.2.2
+numpy==1.26.4
+scikit-learn==1.5.0
+xgboost==2.0.3
+optuna==3.6.1
+imbalanced-learn==0.12.3
+joblib==1.4.2
+pandas-ta==0.3.14b0
+
+# ── Market Data ───────────────────────────────────────────────────────────────
+kiteconnect==5.0.1
+yfinance==0.2.40
+requests==2.32.3
+httpx==0.27.0
+
+# ── Auth & Security ───────────────────────────────────────────────────────────
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+python-dotenv==1.0.1
+
+# ── Utilities ─────────────────────────────────────────────────────────────────
+pytz==2024.1
+python-dateutil==2.9.0
+pydantic==2.7.1
+pydantic-settings==2.3.1
+loguru==0.7.2
+aiohttp==3.9.5
+
+# ── Alerts ────────────────────────────────────────────────────────────────────
+sendgrid==6.11.0
+python-telegram-bot==21.3
+
+# ── Testing ───────────────────────────────────────────────────────────────────
+pytest==8.2.2
+pytest-asyncio==0.23.7
+pytest-cov==5.0.0
+httpx==0.27.0

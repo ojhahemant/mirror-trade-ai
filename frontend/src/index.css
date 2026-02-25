@@ -1,0 +1,87 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background-color: #0D1117;
+    color: #E6EDF3;
+    font-family: 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+    overscroll-behavior: none;
+  }
+  ::-webkit-scrollbar { width: 4px; height: 4px; }
+  ::-webkit-scrollbar-track { background: #0D1117; }
+  ::-webkit-scrollbar-thumb { background: #30363D; border-radius: 2px; }
+}
+
+@layer components {
+  .card {
+    @apply bg-bg-card border border-border-primary rounded-xl p-4;
+  }
+  .btn-primary {
+    @apply bg-brand-green text-bg-primary font-semibold px-6 py-3 rounded-xl
+           hover:bg-brand-green/90 active:scale-95 transition-all duration-150
+           disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  .btn-secondary {
+    @apply bg-bg-tertiary text-text-primary font-medium px-5 py-2.5 rounded-lg
+           hover:bg-bg-hover active:scale-95 transition-all duration-150 border border-border-primary;
+  }
+  .badge-buy {
+    @apply bg-brand-green/15 text-brand-green border border-brand-green/30
+           px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider;
+  }
+  .badge-sell {
+    @apply bg-brand-red/15 text-brand-red border border-brand-red/30
+           px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider;
+  }
+  .badge-neutral {
+    @apply bg-text-secondary/15 text-text-secondary border border-text-secondary/30
+           px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider;
+  }
+  .stat-label {
+    @apply text-xs text-text-secondary font-medium uppercase tracking-wider;
+  }
+  .stat-value {
+    @apply text-lg font-bold font-mono;
+  }
+  .live-dot {
+    @apply w-2 h-2 rounded-full bg-brand-red animate-pulse;
+  }
+  .nav-item {
+    @apply flex flex-col items-center gap-1 py-2 px-4 rounded-lg
+           text-text-secondary hover:text-text-primary transition-colors duration-150
+           cursor-pointer;
+  }
+  .nav-item.active {
+    @apply text-brand-green;
+  }
+}
+
+/* Candlestick chart custom styles */
+.recharts-cartesian-grid-horizontal line,
+.recharts-cartesian-grid-vertical line {
+  stroke: #21262D;
+  stroke-dasharray: none;
+}
+.recharts-text { fill: #8B949E; }
+.recharts-tooltip-wrapper { z-index: 100; }
+
+/* PWA safe areas */
+.pb-safe { padding-bottom: env(safe-area-inset-bottom); }
+.pt-safe { padding-top: env(safe-area-inset-top); }
+
+/* Momentum bar */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.shimmer {
+  background: linear-gradient(90deg, #21262D 25%, #2D333B 50%, #21262D 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
